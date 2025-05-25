@@ -4,12 +4,16 @@ const nextConfig = {
     domains: ['www.noor-book.com', 'www.mojml.com'],
   },
   webpack: (config, { isServer }) => {
-    // Add lightningcss configuration
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      path: false,
-    };
+    // Add proper CSS configuration
+    config.module.rules.push({
+      test: /\.(css|scss|sass)$/,
+      use: [
+        'style-loader',
+        'css-loader',
+        'postcss-loader',
+        'sass-loader',
+      ],
+    });
     return config;
   },
 };
