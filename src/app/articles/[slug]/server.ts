@@ -2,13 +2,12 @@ import { Metadata } from "next";
 import { db } from "@/utils/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
-interface Article {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-  author: string;
-  content: string;
+import { Article } from "@/types/article";
+
+// Use the imported Article type instead of defining a new interface
+export interface ServerArticle extends Article {
+  id: string;
+  slug: string;
 }
 
 export async function generateMetadata({ 

@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { getBooks } from "@/utils/getBooks";
+import { Book } from "@/types/book";
 import styles from "./BooksSection.module.css";
 
 export default function BooksSection() {
-  const [books, setBooks] = useState<any[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

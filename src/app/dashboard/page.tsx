@@ -1,28 +1,29 @@
 "use client"
 import { useState, useEffect } from "react";
 import { db } from "../../utils/firebase";
-import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc, QuerySnapshot, DocumentData } from "firebase/firestore";
 import styles from "./Dashboard.module.css";
+import { Book } from "@/types/book";
+import { Article } from "@/types/article";
 
 export default function Dashboard() {
-  const [books, setBooks] = useState<any[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [cover, setCover] = useState("");
   
-  const [articles, setArticles] = useState<any[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [articleTitle, setArticleTitle] = useState("");
   const [content, setContent] = useState("");
   const [slug, setSlug] = useState("");
   const [articleAuthor, setArticleAuthor] = useState("");
-  
-    
+
   // تحميل الكتب من Firestore
   const fetchBooks = async () => {
-    const querySnapshot = await getDocs(collection(db, "books"));
-    const booksArray: any[] = [];
+    const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(collection(db, "books"));
+    const booksArray: Book[] = [];
     querySnapshot.forEach(doc => {
       booksArray.push({ id: doc.id, ...doc.data() });
     });
@@ -36,9 +37,9 @@ export default function Dashboard() {
   // تحميل المقالات من Firestore
   const fetchArticles = async () => {
     const querySnapshot = await getDocs(collection(db, "articles"));
-    const articlesArray: any[] = [];
+    const articlesArray: Article[] = [];
     querySnapshot.forEach(doc => {
-      articlesArray.push({ id: doc.id, ...doc.data() });
+      articlesArray.push({ id: doc.id, ...doc.data() } as Article);
     });
     setArticles(articlesArray);
   };
@@ -57,11 +58,34 @@ export default function Dashboard() {
     setLink("");
     setCover("");
     fetchBooks();
-    
   };
+
+  // حذف كتاب
+  const handleDeleteBook = async (bookId: string) => {
+    try {
+      await deleteDoc(doc(db, "books", bookId));
+      setBooks(books.filter(book => book && book.id !== bookId));
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    }
+  };
+
+  // حذف مقال
+  const handleDeleteArticle = async (articleId: string) => {
+    try {
+      await deleteDoc(doc(db, "articles", articleId));
+      setArticles(articles.filter(article => article && article.id === articleId));
+    } catch (error) {
+      console.error("Error deleting article:", error);
+    }
+  };
+
   // إضافة مقال جديد
   const handleAddArticle = async () => {
     if (!articleTitle) return alert("اكتب عنوان المقال");
+    if (!articleAuthor) return alert("اكتب اسم المؤلف");
+    if (!content) return alert("اكتب المحتوى");
+    if (!slug) return alert("اكتب الرابط");
     await addDoc(collection(db, "articles"), { title: articleTitle, author: articleAuthor, content, slug });
     setArticleTitle("");
     setArticleAuthor("");
@@ -70,18 +94,6 @@ export default function Dashboard() {
     fetchArticles();
   };
   
-  
-  // حذف كتاب
-  const handleDeleteBook = async (id: string) => {
-    await deleteDoc(doc(db, "books", id));
-    fetchBooks();
-  };
-
-  // حذف مقال
-  const handleDeleteArticle = async (id: string) => {
-    await deleteDoc(doc(db, "articles", id));
-    fetchArticles();
-  };
 
   return (
     <div className={styles.container}>

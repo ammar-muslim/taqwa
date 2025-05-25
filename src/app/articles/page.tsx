@@ -1,25 +1,24 @@
 "use client";
-import React from "react";
 import styles from './Articles.module.css';
 import Link from "next/link";
 import BackgroundIcons from '@/components/background/BackgroundIcons';
 import { useState, useEffect } from "react";
-import Image from 'next/image'
 
 import { db } from "@/utils/firebase";
 import { collection, getDocs } from "firebase/firestore";
+import { Article } from "@/types/article";
 
 function ArticlesPage() {
-  const [articles, setArticles] = useState<any[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "articles"));
-        const articlesArray: any[] = [];
+        const articlesArray: Article[] = [];
         querySnapshot.forEach(doc => {
-          articlesArray.push({ id: doc.id, ...doc.data() })
-        })
+          articlesArray.push({ id: doc.id, ...doc.data() } as Article);
+        });
         setArticles(articlesArray);
       } catch (error) {
         console.error("Error fetching articles:", error);
@@ -45,7 +44,7 @@ function ArticlesPage() {
 
         <section className={styles.section}>
           <div className={styles.sectionWrapper}>
-            {articles.map((article: any) => (
+            {articles.map((article) => (
               <Link key={article.id} href={`/articles/${article.slug}`}>
                 <div className={`${styles.card} ${styles.withPattern}`}>
 

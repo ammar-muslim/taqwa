@@ -1,10 +1,14 @@
 "use client"
 import styles from "./PrayerTimesWidget.module.css";
-import getPrayerTimes from "@/app/api/prayer-times/route";
 import type { PrayerTimes } from "@/app/api/prayer-times/route";
 import { useEffect, useState } from "react";
 
-export default function PrayerTimesWidget() {
+interface PrayerTimesWidgetProps {
+  city: string;
+  country: string;
+}
+
+export default function PrayerTimesWidget({ city, country }: PrayerTimesWidgetProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
@@ -16,8 +20,6 @@ export default function PrayerTimesWidget() {
     Maghrib: false,
     Isha: false,
   });
-
-
 
   // كائن لترجمة أسماء الصلوات
   const prayerNamesAr: Record<string, string> = {
@@ -42,17 +44,22 @@ export default function PrayerTimesWidget() {
   useEffect(() => {
     const fetchPrayerTimes = async () => {
       try {
-        const times = await getPrayerTimes("Mansoura", "Egypt");
-        setLoading(false);
+        setLoading(true);
         setError(null);
+        const response = await fetch(`/api/prayer-times?city=${city}&country=${country}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch prayer times');
+        }
+        const times = await response.json();
         setPrayerTimes(times);
       } catch (error) {
-        setError(error instanceof Error ? error.message : "حدث خطأ");
+        setError(error instanceof Error ? error.message : 'حدث خطأ');
+      } finally {
         setLoading(false);
       }
     };
     fetchPrayerTimes();
-  }, []);
+  }, [city, country]);
 
   if (loading) {
     return (

@@ -1,26 +1,24 @@
-import Image from "next/image";
 import styles from "./page.module.css";
 import BackgroundIcons from "@/components/background/BackgroundIcons";
 import PrayerTimesWidget from "@/components/PrayerTimesWidget/PrayerTimesWidget";
 import { FiSun, FiArrowRight } from "react-icons/fi";
-import { FaMosque, FaPray } from "react-icons/fa";
 import { 
   FiBookOpen, 
   FiCompass, 
-  FiCheckCircle, 
+  FiCheckCircle
 } from "react-icons/fi";
-import { 
-  BsPersonLinesFill, 
-  BsFillMoonStarsFill 
-} from "react-icons/bs";
 import { 
   IoIosGlobe, 
   IoIosBookmarks 
 } from "react-icons/io";
 import { 
-  FaQuran, 
-  FaPrayingHands 
+  FaQuran,
+  FaPrayingHands
 } from "react-icons/fa";
+import { 
+  BsFillMoonStarsFill,
+  BsPersonLinesFill
+} from "react-icons/bs";
 import Link from "next/link";
 import BooksSection from "@/components/BookSection/BooksSection";
 
@@ -61,7 +59,7 @@ export default function Home() {
           </div>
           <div className={styles.heroTimes}>
           <div className={styles.prayerTimesBox}>
-            <PrayerTimesWidget />
+            <PrayerTimesWidget city="Mansoura" country="Egypt" />
           </div>
           </div>
 
@@ -202,9 +200,9 @@ export default function Home() {
 <section className={styles.ayahSection}>
   
   <div className={styles.ayahContent}>
-    <p className={styles.ayahText}>
-      " وَمَا خَلَقْتُ الْجِنَّ وَالْإِنسَ إِلَّا لِيَعْبُدُونِ "
-    </p>
+      <p className={styles.ayahText}>
+        “وَمَا خَلَقْتُ الْجِنَّ وَالْإِنسَ إِلَّا لِيَعْبُدُونِ”
+      </p>
     <p className={styles.ayahExplanation}>
       يخبرنا الله سبحانه وتعالى في هذه الآية أن الغاية من خلق الجن والإنس هي تحقيق عبادة الله وحده لا شريك له. فليست الحياة عبثًا، بل لها هدف سامٍ وهو توحيد الله وطاعته.
     </p>
