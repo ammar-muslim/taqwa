@@ -1,0 +1,59 @@
+/* Background and text for the whole page */
+.container {
+    background-color: white;
+    color: #333;
+  }
+  
+  /* Header styles */
+  .header {
+    background-color: var(--primary-color); /* لون جديد */
+    color: white;
+    padding: 5rem 1.5rem;
+    text-align: center;
+    position: relative;
+  }
+  
+  .header .backLink {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+  
+  .header .backLink:hover {
+    color: #A0D6D0; /* لون أخف من اللون الأساسي */
+  }
+  
+  .header h1 {
+    font-size: 2.25rem; /* النص كبير */
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .header p {
+    font-size: 0.875rem; /* حجم صغير */
+    color: #A0D6D0; /* لون أخف */
+  }
+  
+  /* Content styles */
+  .content {
+    max-width: 72rem; /* 6xl max-width */
+    margin: 0 auto;
+    padding: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    align-items: flex-start;
+  }
+  
+  .contentText {
+    width: 100%;
+    font-size: 1.125rem; /* نص متوسط */
+    line-height: 1.75rem; /* المسافة بين السطور */
+    space-y: 1.5rem;
+  }
+  

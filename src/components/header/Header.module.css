@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Lalezar:wght@400;700&display=swap');
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: var(--background);
+  color: var(--foreground);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+  transition: all var(--transition-speed);
+}
+
+.dark-theme .header {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.logo .img {
+  width: 50px;
+  /* height: 100%; */
+  object-fit: contain;
+}
+.logo .title {
+  font-family: 'Lalezar', cursive;
+  margin: 0;
+  margin-left: 8px;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--foreground);
+}
+.links {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.links a {
+  font-size: 1rem;
+  color: var(--foreground);
+  text-decoration: none;
+  transition: all var(--transition-speed);
+  font-weight: 600;
+  position: relative;
+  padding: 4px 0;
+}
+
+.links a:hover {
+  color: var(--secondary-color);
+}
+
+/* إضافة خط تحت الرابط عند المرور عليه */
+.links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--primary-color);
+  transition: width var(--transition-speed);
+}
+
+.links  a:hover::after {
+  width: 100%;
+}
+.links  .active:hover {
+  color: var(--accent-color);
+}
+
+.links .active {
+  color: var(--accent-color);
+}
+
+
+
+.links .active::after {
+  background-color: var(--accent-color);
+  width: 100%;
+}
+
+/* زر القائمة للأجهزة المحمولة */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--foreground);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* الاستجابة للشاشات المختلفة */
+@media (max-width: 768px) {
+  .header {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .links {
+    gap: 16px;
+  }
+  
+  .links a {
+    font-size: 0.9rem;
+  }
+  
+  /* إظهار زر القائمة */
+  .menu-toggle {
+    display: block;
+  }
+  
+  /* إخفاء الروابط بشكل افتراضي */
+  .links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background-color: var(--background);
+    padding: var(--spacing-md);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    gap: var(--spacing-md);
+  }
+  
+  /* عند تفعيل القائمة */
+  .links.active {
+    display: flex;
+  }
+  
+  .links a::after {
+    display: none;
+  }
+}
+
+/* دعم الاتجاه من اليمين إلى اليسار */
+[dir="rtl"] .header {
+  direction: rtl;
+}
+
+[dir="rtl"] .links a::after {
+  left: auto;
+  right: 0;
+}

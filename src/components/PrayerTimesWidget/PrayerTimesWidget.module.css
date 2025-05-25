@@ -1,0 +1,296 @@
+
+  /* Loading State */
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    padding: 2rem;
+    color: #666;
+    position: relative;
+  }
+  
+  .loading::after {
+    content: "";
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(102, 102, 102, 0.2);
+    border-top-color: #666;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Error State */
+  .error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    padding: 2rem;
+    color: #dc2626;
+    background-color: #fee2e2;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(220, 38, 38, 0.1);
+    border-left: 4px solid #dc2626;
+  }
+  
+
+
+
+
+
+
+
+
+
+
+  /* Content */
+  .content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    position: relative;
+  }
+  
+  .prayerTimes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  
+  /* Prayer Times List */
+  .prayerTimesList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 1.5rem;
+    padding: 2rem;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  
+  .prayerTimesList::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M50 25L75 50L50 75L25 50L50 25Z" fill="%239c4dcc" fill-opacity="0.05"/%3E%3C/svg%3E');
+    background-size: 100px 100px;
+    opacity: 0.1;
+    z-index: 0;
+  }
+  
+  .prayerTime {
+    background: #30143d09;
+    padding: 0.4rem 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(155, 77, 204, 0.116);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-left: 3px solid var(--accent);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    z-index: 1;
+    animation: fadeInUp 0.5s ease-out forwards;
+    border: 1px solid rgba(139, 89, 155, 0.151);
+    backdrop-filter: blur(5px);
+    color: var(--foreground);
+  }
+
+  .prayerTime::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1.5%;
+    height: 100%;
+    background-color: #5e35b1;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+  }
+
+
+  .prayerTime::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(94, 53, 177, 0.03) 0%, rgba(124, 77, 255, 0.03) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .prayerTime:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(156, 77, 204, 0.15);
+  }
+
+  .prayerTime strong {
+    font-weight: 500;
+    color: var(--foreground);
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .prayerTime span {
+    color: var(--secondary-color);
+    font-weight: 500;
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Prayer time icons */
+  .prayerIcon {
+    font-size: 1.5rem;
+    color: var(--foreground);
+    margin-right: 0.5rem;
+    animation: pulse 2s infinite;
+  }
+
+  /* Checkbox styles */
+  .checkboxContainer {
+    padding: 1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--foreground);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    z-index: 1;
+    border: none;
+  }
+
+  .checkboxContainer:hover {
+    background: rgba(156, 77, 204, 0.2);
+  }
+  
+  .checkboxContainer input:checked + .checkmark {
+    background: linear-gradient(135deg, #9c4dcc 0%, #ba68c8 100%);
+    border-color: transparent;
+  }
+
+  .checkboxContainer input {
+    width: 20px;
+    height: 20px;
+    background: #280042;
+    border-color: transparent;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .checkboxContainer input:checked {
+    background: linear-gradient(135deg, #9c4dcc 0%, #ba68c8 100%);
+    border-color: transparent;
+  }
+
+  .prayerTime:hover::before {
+    opacity: 1;
+  }
+
+  /* Prayer time animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  /* Border animation */
+  .prayerTime::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1.5%;
+    height: 100%;
+    background: linear-gradient(135deg, #9c4dcc 0%, #ba68c8 100%);
+    animation: borderGrow 2s ease-in-out infinite;
+  }
+
+  @keyframes borderGrow {
+    0%, 100% {
+      transform: scaleX(1);
+    }
+    50% {
+      transform: scaleX(1.5);
+    }
+  }
+
+  /* Loading animation */
+  .loadingSpinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(156, 77, 204, 0.2);
+    border-top: 3px solid #9c4dcc;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .header {
+      padding: 2.5rem 0;
+      clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+    }
+    
+    .prayerTimesList {
+      padding: 2rem 1rem;
+      gap: 1rem;
+    }
+    
+    .content {
+      padding: 0 1rem;
+    }
+    
+    .prayerTime {
+      padding: 1.25rem;
+    }
+  }
+
+
+  @keyframes fadeInDown {
+    0% {
+      width: 80%;
+    }
+    50% {
+      width: 150%;
+    }
+    100% {
+      width: 80%;
+    }
+  }

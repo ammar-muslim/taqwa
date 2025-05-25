@@ -1,0 +1,62 @@
+.dark-mode-toggle {
+  --padding: 4px;
+  --size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 64px;
+  height: var(--size);
+  border-radius: 9999px;
+  padding: var(--padding);
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.light {
+  background-color: rgba(147, 112, 219, 0.1);
+  border: 1px solid rgba(147, 112, 219, 0.2);
+}
+
+.dark {
+  background-color: rgba(75, 0, 130, 0.4);
+  border: 1px solid rgba(75, 0, 130, 0.5);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  transition: opacity 0.3s ease;
+}
+
+.sun {
+  color: #facc15;
+}
+
+.moon {
+  color: #93c5fd;
+}
+
+.switcher {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.switcher.light {
+  left: var(--padding);
+  background: linear-gradient(145deg, #fcd34d, #fbbf24);
+}
+
+.switcher.dark {
+  right: var(--padding);
+  background: linear-gradient(145deg, #60a5fa, #8b5cf6);
+}
+
+.switcher.animating {
+  transform: scale(1.1);
+}

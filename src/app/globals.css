@@ -1,42 +1,107 @@
+
+/* app/globals.css أو styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 🎨 ألوان عامة */
+  --background: linear-gradient(to right, #f8f4ff, #c39eff);
+  --foreground: #36124e;
+
+  --primary-color: #6a1b9a;         /* بنفسجي متوسط */
+  --secondary-color: #9575cd;       /* بنفسجي فاتح */
+
+  --button-primary: #8e24aa;        /* زر بنفسجي واضح */
+  --button-secondary: #d1c4e9;      /* زر فاتح */
+
+  --accent-color: #ff6b81;          /* لون للتأكيد */
+  --success-color: #4caf50;
+  --warning-color: #ffb300;
+  --error-color: #e53935;
+
+  /* ✨ تحسين ألوان إضافية */
+  --muted-text: #6b587a;
+  --light-text: #f9f5ff;
+
+  /* 🧱 حدود ومسافات */
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 1rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+
+  /* ⚡ سرعة الأنيميشن */
+  --transition-speed: 0.3s;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.light {
+  --background: #faf5ff;
+  --foreground: #4f1e70;
+  --button-primary: #9c4dcc;
+  --button-secondary: #cdb4e6;
+  --muted-text: #bba8d6;
+  --light-text: #fff;
+  --hero-background: #f8f4ff;
+  --hero-secondary-background: #dfd2f1;
 }
 
-html,
+.dark {
+  --background: #4f1e70;
+  --foreground: #f3e8ff;
+  --button-primary: #ba68c8;
+  --button-secondary: #6a1b9a;
+  --muted-text: #5e4a73;
+  --light-text: #fff;
+  --hero-background: #280042;
+  --hero-secondary-background: #280042;
+}
+
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
+  /* font-family: var(--font-cairo-sans), 'Arial', sans-serif; */
+  margin: 0;
+  padding: 0;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+  background-color: var(--background);
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
+}
+
+ul{
+  list-style: none;
   margin: 0;
+  padding: 0;
+  
+}
+.btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-speed);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* أنماط الأزرار الأساسية */
+.btn-primary {
+  background-color: var(--button-primary);
+  color: white;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.btn-primary:hover {
+  background-color: var(--primary-color);
 }
+
+.btn-secondary {
+  background-color: var(--button-secondary);
+  color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+  background-color: #c0b3d8;
+}
+
