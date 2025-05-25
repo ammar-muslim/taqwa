@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { Article } from "@/types/article";
 import ArticleContent from "./components/ArticleContent";
 import { getData } from "./server";
 
