@@ -1,20 +1,24 @@
-
 /* app/globals.css أو styles/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
   /* 🎨 ألوان عامة */
   --background: linear-gradient(to right, #f8f4ff, #c39eff);
   --foreground: #36124e;
+  --primary-color: #ff7043;
+  --button-primary: #e65c33;
+  --transition-speed: 0.3s;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 1rem;
 
-  --primary-color: #6a1b9a;         /* بنفسجي متوسط */
   --secondary-color: #9575cd;       /* بنفسجي فاتح */
 
-  --button-primary: #8e24aa;        /* زر بنفسجي واضح */
-  --button-secondary: #d1c4e9;      /* زر فاتح */
 
   --accent-color: #ff6b81;          /* لون للتأكيد */
   --success-color: #4caf50;
