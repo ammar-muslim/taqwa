@@ -1,9 +1,10 @@
+// [slug]/page.tsx
 import { Metadata } from 'next';
-import { Article } from '@/types/article';
+import { getData } from "./server";
 import ArticleContent from "./components/ArticleContent";
 import styles from "./Article.module.css";
-import { getData } from "./server";
-import type { GetStaticProps, InferGetStaticPropsType } from 'next';
+
+export const dynamic = "force-dynamic"; // <-- هذا لحل المشكلة إذا لم تستخدم generateStaticParams
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const article = await getData(params.slug);
@@ -17,7 +18,6 @@ export default async function ArticlePage({
   params
 }: {
   params: { slug: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const article = await getData(params.slug);
   if (!article) {
