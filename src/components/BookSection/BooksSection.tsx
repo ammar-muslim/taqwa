@@ -31,21 +31,40 @@ export default function BooksSection() {
       <div className={styles.booksBox}>
         {books.slice(0, 6).map((book) => (
           <div key={book.id} className={styles.book}>
-            <Link href={book.link}>
-              <h5 className={styles.bookNumber}>{book.id.slice(0, 1)}</h5>
-              <div className={styles.imageContainer}>
-                <Image
-                  src={book.cover}
-                  alt="book"
-                  width={200}
-                  height={250}
-                  className={styles.coverImage}
-                />
+            {book.link ? (
+              <Link href={book.link}>
+                {book.id && <h5 className={styles.bookNumber}>{book.id.slice(0, 1)}</h5>}
+                {book.cover && (
+                  <div className={styles.imageContainer}>
+                    <Image
+                      src={book.cover}
+                      alt="book"
+                      width={200}
+                      height={250}
+                    />
+                  </div>
+                )}
+                {book.title && <h3 className={styles.bookTitle}>{book.title}</h3>}
+              </Link>
+            ) : (
+              <div>
+                {book.id && <h5 className={styles.bookNumber}>{book.id.slice(0, 1)}</h5>}
+                {book.cover && (
+                  <div className={styles.imageContainer}>
+                    <Image
+                      src={book.cover}
+                      alt="book"
+                      width={200}
+                      height={250}
+                    />
+                  </div>
+                )}
+                {book.title && <h3 className={styles.bookTitle}>{book.title}</h3>}
               </div>
-              <h2 className={styles.bookTitle}>{book.title}</h2>
-              <h4 className={styles.bookAuthor}>{book.author}</h4>
-              <p className={styles.bookDescription}>{book.description}</p>
-            </Link>
+            )}
+            <h2 className={styles.bookTitle}>{book.title}</h2>
+            <h4 className={styles.bookAuthor}>{book.author}</h4>
+            <p className={styles.bookDescription}>{book.description}</p>
           </div>
         ))}
       </div>

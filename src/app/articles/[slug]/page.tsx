@@ -22,7 +22,7 @@ export interface Article {
 
 export async function generateMetadata(
   { params }: ArticlePageProps,
-  parent?: ResolvingMetadata
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
   const resolvedParams = await params;
   const article = await getData(resolvedParams.slug);
@@ -30,6 +30,10 @@ export async function generateMetadata(
   return {
     title: article?.title || 'مقال غير موجود',
     description: article?.content?.substring(0, 160) || 'لا يوجد وصف',
+    openGraph: {
+      title: article?.title || 'مقال غير موجود',
+      description: article?.content?.substring(0, 160) || 'لا يوجد وصف',
+    },
   };
 }
 
