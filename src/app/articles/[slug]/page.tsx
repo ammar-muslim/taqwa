@@ -7,9 +7,7 @@ import styles from './Article.module.css';
 export const dynamic = 'force-dynamic';
 
 type ArticlePageProps = {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 };
 
 
@@ -26,7 +24,8 @@ export async function generateMetadata(
   { params }: ArticlePageProps,
   parent?: ResolvingMetadata
 ): Promise<Metadata> {
-  const article = await getData(params.slug);
+  const resolvedParams = await params;
+  const article = await getData(resolvedParams.slug);
 
   return {
     title: article?.title || 'مقال غير موجود',
@@ -35,7 +34,8 @@ export async function generateMetadata(
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
-  const article = await getData(params.slug);
+  const resolvedParams = await params;
+  const article = await getData(resolvedParams.slug);
 
   if (!article) {
     return <div>المقال غير موجود</div>;
