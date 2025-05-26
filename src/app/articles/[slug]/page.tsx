@@ -1,23 +1,44 @@
 // src/app/articles/[slug]/page.tsx
-import { Metadata } from 'next';
-import { getData } from "./server";
-import ArticleContent from "./components/ArticleContent";
-import styles from "./Article.module.css";
+import type { Metadata, ResolvingMetadata } from 'next';
+import { getData } from './server';
+import ArticleContent from './components/ArticleContent';
+import styles from './Article.module.css';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+type ArticlePageProps = {
+  params: {
+    slug: string;
+  };
+};
+
+
+// src/types/article.ts
+export interface Article {
+  title: string;
+  slug: string;
+  content: string;
+  author?: string;
+  createdAt?: string;
+}
+
+export async function generateMetadata(
+  { params }: ArticlePageProps,
+  parent?: ResolvingMetadata
+): Promise<Metadata> {
   const article = await getData(params.slug);
+
   return {
-    title: article.title,
-    description: article.content.substring(0, 160),
+    title: article?.title || 'مقال غير موجود',
+    description: article?.content?.substring(0, 160) || 'لا يوجد وصف',
   };
 }
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
+export default async function ArticlePage({ params }: ArticlePageProps) {
   const article = await getData(params.slug);
+
   if (!article) {
-    return <div>Article not found</div>;
+    return <div>المقال غير موجود</div>;
   }
 
   return (
