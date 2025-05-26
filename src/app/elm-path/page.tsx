@@ -8,6 +8,7 @@ import {
   FaBook,
 } from "react-icons/fa";
 import BackgroundIcons from "@/components/background/BackgroundIcons";
+import Link from "next/link";
 
 const data = {
   shar3i_path: [
@@ -142,10 +143,7 @@ const data = {
           "التفسير ٣: تفسير ابن كثير"
         ]
       }
-    }
-
-
-
+    } 
   ]
 }
 
@@ -225,6 +223,7 @@ export default function ElmPath() {
               </div>
             </div>
           ))}
+          <Link className={styles.linkTitle} target="_blank" href="https://www.takwin.com/">الخريطة من موقع تكوين الراسخين</Link>
         </div>
       </BackgroundIcons>
     </div>

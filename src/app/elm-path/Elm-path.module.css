@@ -184,6 +184,33 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
+
+.linkTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+  width: fit-content;
+  padding: 10px;
+  border-radius: 30px;
+  position: relative;
+  margin: 2rem auto 0;
+  top: 1rem;
+  z-index: 2;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+  opacity: 1;
+  transition: all 0.5s ease;
+  cursor: pointer;
+}
+
+.linkTitle:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+
 .section {
   position: relative;
   width: 45%;
