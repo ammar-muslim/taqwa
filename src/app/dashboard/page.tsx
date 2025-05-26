@@ -61,24 +61,24 @@ export default function Dashboard() {
   };
 
   // حذف كتاب
-  const handleDeleteBook = async (bookId: string) => {
-    try {
-      await deleteDoc(doc(db, "books", bookId));
-      setBooks(books.filter(book => book && book.id !== bookId));
-    } catch (error) {
-      console.error("Error deleting book:", error);
-    }
-  };
+  // const handleDeleteBook = async (bookId: string) => {
+  //   try {
+  //     await deleteDoc(doc(db, "books", bookId));
+  //     setBooks(books.filter(book => book && book.id !== bookId));
+  //   } catch (error) {
+  //     console.error("Error deleting book:", error);
+  //   }
+  // };
 
   // حذف مقال
-  const handleDeleteArticle = async (articleId: string) => {
-    try {
-      await deleteDoc(doc(db, "articles", articleId));
-      setArticles(articles.filter(article => article && article.id === articleId));
-    } catch (error) {
-      console.error("Error deleting article:", error);
-    }
-  };
+  // const handleDeleteArticle = async (articleId: string) => {
+  //   try {
+  //     await deleteDoc(doc(db, "articles", articleId));
+  //     setArticles(articles.filter(article => article && article.id === articleId));
+  //   } catch (error) {
+  //     console.error("Error deleting article:", error);
+  //   }
+  // };
 
   // إضافة مقال جديد
   const handleAddArticle = async () => {
@@ -141,7 +141,7 @@ export default function Dashboard() {
           return (
             <li key={book.id} className={styles.book}>
               {book.title}
-              <button onClick={() => handleDeleteBook(book.id || "")}>حذف</button>
+              {/* <button onClick={() => handleDeleteBook(book.id || "")}>حذف</button> */}
             </li>
           );
         })}
@@ -184,7 +184,7 @@ export default function Dashboard() {
         {articles.map(article => (
           <li key={article.id} className={styles.article}>
             {article.title}
-            <button onClick={() => handleDeleteArticle(article.id || "")}>حذف</button>
+            {/* <button onClick={() => handleDeleteArticle(article.id || "")}>حذف</button> */}
           </li>
         ))}
       </ul>
