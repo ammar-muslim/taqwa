@@ -1,7 +1,10 @@
+import { Metadata } from 'next';
+import { Article } from '@/types/article';
 import ArticleContent from "./components/ArticleContent";
+import styles from "./Article.module.css";
 import { getData } from "./server";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const article = await getData(params.slug);
   return {
     title: article.title,
@@ -19,5 +22,9 @@ export default async function ArticlePage({
     return <div>Article not found</div>;
   }
 
-  return <ArticleContent article={article} />;
+  return (
+    <div className={styles.container}>
+      <ArticleContent article={article} />
+    </div>
+  );
 }
