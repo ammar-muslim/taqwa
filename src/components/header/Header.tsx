@@ -12,13 +12,12 @@ const Header = () => {
   return (
     <div className={styles.header}>
         <Link className= {styles.logo } href="/"> 
-        <Image className={styles.img} src="/images/logo.png" alt="logo" width={40} height={40} />
+        <Image className={styles.img} src="/images/logo.PNG" alt="logo" width={40} height={40} />
         <h1 className={styles.title}> تَقوَى </h1>
         </Link>
         <div className={styles.links}> 
        
             <Link className={pathname === "/" ? styles.active : ""} href="/"> الصفحة الرئيسية </Link>
-            {/* <Link href="/prayer-times" > اوقات الصلاة </Link> */}
             <Link className={pathname === "/books" ? styles.active : ""} href="/books" > الكتب </Link>
             <Link className={pathname === "/articles" ? styles.active : ""} href="/articles" > المقالات </Link>   
             <Link className={pathname === "/elm-path" ? styles.active : ""} href="/elm-path" > مسار العلم الشرعي </Link>
