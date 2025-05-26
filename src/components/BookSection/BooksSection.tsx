@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -25,46 +26,43 @@ export default function BooksSection() {
   return (
     <div className={styles.booksSection}>
       <h2 className={styles.sectionTitle}>
-        <span className={styles.sectionTitleSpan}>اهم الكتب</span>
+        <span className={styles.sectionTitleSpan}>أهم الكتب</span>
       </h2>
 
       <div className={styles.booksBox}>
         {books.slice(0, 6).map((book) => (
           <div key={book.id} className={styles.book}>
-            {book.link ? (
-              <Link href={book.link}>
-                {book.id && <h5 className={styles.bookNumber}>{book.id.slice(0, 1)}</h5>}
-                {book.cover && (
-                  <div className={styles.imageContainer}>
-                    <Image
-                      src={book.cover}
-                      alt="book"
-                      width={200}
-                      height={250}
-                    />
-                  </div>
-                )}
-                {book.title && <h3 className={styles.bookTitle}>{book.title}</h3>}
-              </Link>
-            ) : (
-              <div>
-                {book.id && <h5 className={styles.bookNumber}>{book.id.slice(0, 1)}</h5>}
-                {book.cover && (
-                  <div className={styles.imageContainer}>
-                    <Image
-                      src={book.cover}
-                      alt="book"
-                      width={200}
-                      height={250}
-                    />
-                  </div>
-                )}
-                {book.title && <h3 className={styles.bookTitle}>{book.title}</h3>}
+            <Link
+              href={book.link || "#"}
+              target={book.link ? "_blank" : "_self"}
+              rel="noopener noreferrer"
+            >
+              <h5 className={styles.bookNumber}>
+                {book.id?.slice(0, 1) ?? "-"}
+              </h5>
+
+              <div className={styles.imageContainer}>
+                <Image
+                  src={book.cover || "/placeholder.jpg"}
+                  alt={book.title ?? "غلاف الكتاب"}
+                  width={200}
+                  height={250}
+                  className={styles.coverImage}
+                />
               </div>
-            )}
-            <h2 className={styles.bookTitle}>{book.title}</h2>
-            <h4 className={styles.bookAuthor}>{book.author}</h4>
-            <p className={styles.bookDescription}>{book.description}</p>
+
+              <h2 className={styles.bookTitle}>
+                {book.title ?? "عنوان الكتاب"}
+              </h2>
+
+              <h4 className={styles.bookAuthor}>
+                {book.author ?? "المؤلف غير معروف"}
+              </h4>
+
+              <p className={styles.bookDescription}>
+                {book.description ?? ""}
+              </p>
+            </Link>
           </div>
         ))}
       </div>
