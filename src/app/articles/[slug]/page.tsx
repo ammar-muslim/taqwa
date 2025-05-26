@@ -6,12 +6,7 @@ import styles from "./Article.module.css";
 
 export const dynamic = "force-dynamic";
 
-type Props = {
-  params: { slug: string }
-  searchParams?: { [key: string]: string | string[] | undefined }
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const article = await getData(params.slug);
   return {
     title: article.title,
@@ -19,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ArticlePage({ params }: Props) {
+export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const article = await getData(params.slug);
   if (!article) {
     return <div>Article not found</div>;
