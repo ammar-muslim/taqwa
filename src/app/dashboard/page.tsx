@@ -136,12 +136,15 @@ export default function Dashboard() {
       />
       <button className={styles.button} onClick={handleAddBook}>أضف كتاب</button>
       <ul>
-        {books.map(book => (
-          <li key={book.id} className={styles.book}>
-            {book.title}
-            <button onClick={() => handleDeleteBook(book.id)}>حذف</button>
-          </li>
-        ))}
+        {books.map((book) => {
+          if (!book.id) return null;
+          return (
+            <li key={book.id} className={styles.book}>
+              {book.title}
+              <button onClick={() => handleDeleteBook(book.id || "")}>حذف</button>
+            </li>
+          );
+        })}
       </ul>
   
       </div>
@@ -181,7 +184,7 @@ export default function Dashboard() {
         {articles.map(article => (
           <li key={article.id} className={styles.article}>
             {article.title}
-            <button onClick={() => handleDeleteArticle(article.id)}>حذف</button>
+            <button onClick={() => handleDeleteArticle(article.id || "")}>حذف</button>
           </li>
         ))}
       </ul>
