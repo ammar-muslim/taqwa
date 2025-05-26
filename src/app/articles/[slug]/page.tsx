@@ -1,12 +1,17 @@
-// [slug]/page.tsx
+// src/app/articles/[slug]/page.tsx
 import { Metadata } from 'next';
 import { getData } from "./server";
 import ArticleContent from "./components/ArticleContent";
 import styles from "./Article.module.css";
 
-export const dynamic = "force-dynamic"; // <-- هذا لحل المشكلة إذا لم تستخدم generateStaticParams
+export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+type Props = {
+  params: { slug: string }
+  searchParams?: { [key: string]: string | string[] | undefined }
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getData(params.slug);
   return {
     title: article.title,
@@ -14,11 +19,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ArticlePage({
-  params
-}: {
-  params: { slug: string };
-}) {
+export default async function ArticlePage({ params }: Props) {
   const article = await getData(params.slug);
   if (!article) {
     return <div>Article not found</div>;
