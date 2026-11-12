@@ -5,15 +5,16 @@ import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
 import { ThemeProvider } from "../context/ThemeContext";
 
-
 const cairo = Cairo({
   subsets: ["arabic"],
-  weight: "400", variable: "--font-lalezar"});
-
+  weight: "400",
+  variable: "--font-lalezar",
+});
 
 export const metadata: Metadata = {
   title: "Taqwa - الموقع الإسلامي الشامل",
-  description: "موقع يحتوي على مواعيد الصلاة، مقاطع قرآنية، مقالات إسلامية وكتب وأذكار.",
+  description:
+    "موقع يحتوي على مواعيد الصلاة، مقاطع قرآنية، مقالات إسلامية وكتب وأذكار.",
 };
 
 export default function RootLayout({
@@ -32,5 +33,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-  
 }

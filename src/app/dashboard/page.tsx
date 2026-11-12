@@ -1,195 +1,375 @@
-"use client"
-import { useState, useEffect } from "react";
+
+"use client";
+
+import { useEffect, useState } from "react";
 import { db } from "../../utils/firebase";
-import { collection, addDoc, getDocs, deleteDoc, doc, QuerySnapshot, DocumentData } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+
 import styles from "./Dashboard.module.css";
 import { Book } from "@/types/book";
 import { Article } from "@/types/article";
 
 export default function Dashboard() {
+  // Data states
   const [books, setBooks] = useState<Book[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
+
+  // Form states
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [cover, setCover] = useState("");
-  
-  const [articles, setArticles] = useState<Article[]>([]);
+
   const [articleTitle, setArticleTitle] = useState("");
+  const [articleAuthor, setArticleAuthor] = useState("");
   const [content, setContent] = useState("");
   const [slug, setSlug] = useState("");
-  const [articleAuthor, setArticleAuthor] = useState("");
 
-  // تحميل الكتب من Firestore
-  const fetchBooks = async () => {
-    const querySnapshot: QuerySnapshot<DocumentData> = await getDocs(collection(db, "books"));
-    const booksArray: Book[] = [];
-    querySnapshot.forEach(doc => {
-      booksArray.push({ id: doc.id, ...doc.data() });
-    });
-    setBooks(booksArray);
-  };
+  // UI states
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSavingBook, setIsSavingBook] = useState(false);
+  const [isSavingArticle, setIsSavingArticle] = useState(false);
+  const [error, setError] = useState("");
 
+  // Fetch data
   useEffect(() => {
-    fetchBooks();
+    const fetchData = async () => {
+      try {
+        const [booksSnapshot, articlesSnapshot] =
+          await Promise.all([
+            getDocs(collection(db, "books")),
+            getDocs(collection(db, "articles")),
+          ]);
+
+        setBooks(
+          booksSnapshot.docs.map((item) => ({
+            ...item.data(),
+            id: item.id,
+          })) as Book[]
+        );
+
+        setArticles(
+          articlesSnapshot.docs.map((item) => ({
+            ...item.data(),
+            id: item.id,
+          })) as Article[]
+        );
+      } catch (error) {
+        console.error(error);
+        setError("Failed to load dashboard data.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  // تحميل المقالات من Firestore
-  const fetchArticles = async () => {
-    const querySnapshot = await getDocs(collection(db, "articles"));
-    const articlesArray: Article[] = [];
-    querySnapshot.forEach(doc => {
-      articlesArray.push({ id: doc.id, ...doc.data() } as Article);
-    });
-    setArticles(articlesArray);
+  // Add book
+  const handleAddBook = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!title.trim()) return;
+
+    setError("");
+    setIsSavingBook(true);
+
+    const newBook = {
+      title: title.trim(),
+      author: author.trim(),
+      description: description.trim(),
+      link: link.trim(),
+      cover: cover.trim(),
+    };
+
+    try {
+      const docRef = await addDoc(
+        collection(db, "books"),
+        newBook
+      );
+
+      setBooks((prev) => [
+        { ...newBook, id: docRef.id } as Book,
+        ...prev,
+      ]);
+
+      setTitle("");
+      setAuthor("");
+      setDescription("");
+      setLink("");
+      setCover("");
+    } catch (error) {
+      console.error(error);
+      setError("Failed to add book.");
+    } finally {
+      setIsSavingBook(false);
+    }
   };
 
-  useEffect(() => {
-    fetchArticles();
-  }, []);
+  // Delete book
+  const handleDeleteBook = async (bookId: string) => {
+    if (!window.confirm("Are you sure you want to delete this book?")) {
+      return;
+    }
 
-  // إضافة كتاب جديد
-  const handleAddBook = async () => {
-    if (!title) return alert("اكتب عنوان الكتاب");
-    await addDoc(collection(db, "books"), { title, author, description, link, cover });
-    setTitle("");
-    setAuthor("");
-    setDescription("");
-    setLink("");
-    setCover("");
-    fetchBooks();
+    try {
+      await deleteDoc(doc(db, "books", bookId));
+
+      setBooks((prev) =>
+        prev.filter((book) => book.id !== bookId)
+      );
+    } catch (error) {
+      console.error(error);
+      setError("Failed to delete book.");
+    }
   };
 
-  // حذف كتاب
-  // const handleDeleteBook = async (bookId: string) => {
-  //   try {
-  //     await deleteDoc(doc(db, "books", bookId));
-  //     setBooks(books.filter(book => book && book.id !== bookId));
-  //   } catch (error) {
-  //     console.error("Error deleting book:", error);
-  //   }
-  // };
+  // Add article
+  const handleAddArticle = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
 
-  // حذف مقال
-  // const handleDeleteArticle = async (articleId: string) => {
-  //   try {
-  //     await deleteDoc(doc(db, "articles", articleId));
-  //     setArticles(articles.filter(article => article && article.id === articleId));
-  //   } catch (error) {
-  //     console.error("Error deleting article:", error);
-  //   }
-  // };
+    if (!articleTitle.trim() || !articleAuthor.trim() ||
+        !content.trim() || !slug.trim()) {
+      return;
+    }
 
-  // إضافة مقال جديد
-  const handleAddArticle = async () => {
-    if (!articleTitle) return alert("اكتب عنوان المقال");
-    if (!articleAuthor) return alert("اكتب اسم المؤلف");
-    if (!content) return alert("اكتب المحتوى");
-    if (!slug) return alert("اكتب الرابط");
-    await addDoc(collection(db, "articles"), { title: articleTitle, author: articleAuthor, content, slug });
-    setArticleTitle("");
-    setArticleAuthor("");
-    setContent("");
-    setSlug("");
-    fetchArticles();
+    setError("");
+    setIsSavingArticle(true);
+
+    const newArticle = {
+      title: articleTitle.trim(),
+      author: articleAuthor.trim(),
+      content: content.trim(),
+      slug: slug.trim(),
+    };
+
+    try {
+      const docRef = await addDoc(
+        collection(db, "articles"),
+        newArticle
+      );
+
+      setArticles((prev) => [
+        { ...newArticle, id: docRef.id } as Article,
+        ...prev,
+      ]);
+
+      setArticleTitle("");
+      setArticleAuthor("");
+      setContent("");
+      setSlug("");
+    } catch (error) {
+      console.error(error);
+      setError("Failed to add article.");
+    } finally {
+      setIsSavingArticle(false);
+    }
   };
-  
+
+  // Delete article
+  const handleDeleteArticle = async (articleId: string) => {
+    if (!window.confirm("Are you sure you want to delete this article?")) {
+      return;
+    }
+
+    try {
+      await deleteDoc(doc(db, "articles", articleId));
+
+      setArticles((prev) =>
+        prev.filter((article) => article.id !== articleId)
+      );
+    } catch (error) {
+      console.error(error);
+      setError("Failed to delete article.");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className={styles.loadingSpinner}>
+        Loading dashboard...
+      </div>
+    );
+  }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.booksSection}> 
-      <h1>لوحة التحكم - الكتب</h1>
-      <input
-        type="text"
-        className={styles.input}
-        placeholder="عنوان الكتاب"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <input
-        type="text"
-        className={styles.input}
-        placeholder="اسم المؤلف"
-        value={author}
-        onChange={(e) => setAuthor(e.target.value)}
-      />
-      <input
-        type="text"
-        className={styles.input}
-        placeholder="وصف الكتاب"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <input
-        type="text"
-          className={styles.input}
-        placeholder="رابط الكتاب"
-        value={link}
-        onChange={(e) => setLink(e.target.value)}
-      />
-      <input
-        type="text"
-        className={styles.input}
-        placeholder="رابط الصورة"
-        value={cover}
-        onChange={(e) => setCover(e.target.value)}
-      />
-      <button className={styles.button} onClick={handleAddBook}>أضف كتاب</button>
-      <ul>
-        {books.map((book) => {
-          if (!book.id) return null;
-          return (
-            <li key={book.id} className={styles.book}>
-              {book.title}
-              {/* <button onClick={() => handleDeleteBook(book.id || "")}>حذف</button> */}
-            </li>
-          );
-        })}
-      </ul>
-  
-      </div>
-      <div className={styles.articlesSection}> 
-      <h1>لوحة التحكم - المقالات</h1>
-      <input
-        type="text"
-        className={styles.input}
-        placeholder="عنوان المقال"
-        value={articleTitle}
-        onChange={(e) => setArticleTitle(e.target.value)}
-      />
-      <input
-        type="text"
-        className={styles.input}
-        placeholder="اسم المؤلف"
-        value={articleAuthor}
-        onChange={(e) => setArticleAuthor(e.target.value)}
-      />
-      <input
-        type="text"
-        className={styles.input}
-        placeholder="الرابط"
-        value={slug}
-        onChange={(e) => setSlug(e.target.value)}
-      />
-      <input
-        type="text"
-        className={styles.input}
-        placeholder="المحتوى"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
+    <main className={styles.container}>
+      {error && (
+        <div className={styles.alertDanger} role="alert">
+          {error}
+          <button
+            type="button"
+            onClick={() => setError("")}
+            aria-label="Close error"
+          >
+            ×
+          </button>
+        </div>
+      )}
 
-      <button className={styles.button} onClick={handleAddArticle}>أضف مقال</button>
-      <ul>
-        {articles.map(article => (
-          <li key={article.id} className={styles.article}>
-            {article.title}
-            {/* <button onClick={() => handleDeleteArticle(article.id || "")}>حذف</button> */}
-          </li>
-        ))}
-      </ul>
-  
-      </div>
-    </div>
+      {/* Books Section */}
+      <section className={styles.booksSection}>
+        <h1>Books Dashboard</h1>
+
+        <form onSubmit={handleAddBook}>
+          <div className={styles.formGroup}>
+            <input
+              className={styles.input}
+              placeholder="Book title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+
+            <input
+              className={styles.input}
+              placeholder="Author"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+            />
+
+            <textarea
+              className={styles.input}
+              placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+
+            <input
+              className={styles.input}
+              placeholder="Book link"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+            />
+
+            <input
+              className={styles.input}
+              placeholder="Cover image URL"
+              value={cover}
+              onChange={(e) => setCover(e.target.value)}
+            />
+
+            <button
+              className={styles.button}
+              type="submit"
+              disabled={isSavingBook}
+            >
+              {isSavingBook ? "Adding..." : "Add Book"}
+            </button>
+          </div>
+        </form>
+
+        <div className={styles.booksList}>
+          <h2>Books ({books.length})</h2>
+
+          {books.length === 0 ? (
+            <p>No books found.</p>
+          ) : (
+            <ul>
+              {books.map((book) => (
+                <li key={book.id} className={styles.book}>
+                  <div className={styles.bookInfo}>
+                    <strong>{book.title}</strong>
+                    <p>{book.author}</p>
+                  </div>
+
+                  <button
+                    className={styles.deleteBtn}
+                    type="button"
+                    onClick={() => handleDeleteBook(book.id!)}
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      {/* Articles Section */}
+      <section className={styles.articlesSection}>
+        <h1>Articles Dashboard</h1>
+
+        <form onSubmit={handleAddArticle}>
+          <div className={styles.formGroup}>
+            <input
+              className={styles.input}
+              placeholder="Article title"
+              value={articleTitle}
+              onChange={(e) => setArticleTitle(e.target.value)}
+              required
+            />
+
+            <input
+              className={styles.input}
+              placeholder="Author"
+              value={articleAuthor}
+              onChange={(e) => setArticleAuthor(e.target.value)}
+              required
+            />
+
+            <input
+              className={styles.input}
+              placeholder="Slug"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              required
+            />
+
+            <textarea
+              className={styles.input}
+              placeholder="Article content"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              required
+            />
+
+            <button
+              className={styles.button}
+              type="submit"
+              disabled={isSavingArticle}
+            >
+              {isSavingArticle ? "Adding..." : "Add Article"}
+            </button>
+          </div>
+        </form>
+
+        <div className={styles.articlesList}>
+          <h2>Articles ({articles.length})</h2>
+
+          {articles.length === 0 ? (
+            <p>No articles found.</p>
+          ) : (
+            <ul>
+              {articles.map((article) => (
+                <li key={article.id} className={styles.article}>
+                  <div className={styles.articleInfo}>
+                    <strong>{article.title}</strong>
+                    <p>{article.author}</p>
+                  </div>
+
+                  <button
+                    className={styles.deleteBtn}
+                    type="button"
+                    onClick={() => handleDeleteArticle(article.id!)}
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+    </main>
   );
 }
