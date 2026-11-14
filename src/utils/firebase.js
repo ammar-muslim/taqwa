@@ -1,6 +1,7 @@
-// lib/firebase.js
-import { initializeApp } from "firebase/app";
+
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBU2Udlz9lLCbDGxsaANy8lT_0wL8vrorQ",
@@ -12,7 +13,10 @@ const firebaseConfig = {
   measurementId: "G-2NZ4HJ1C4Q"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-export { db };
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+export const ADMIN_UID = "Xm3bG6Q7hIhyhXYly7zU6P7aXLo1";
+export { db, auth };

@@ -1,6 +1,6 @@
-
-
-:root {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;:root {
   /* 🎨 ألوان عامة */
   --background: linear-gradient(to right, #f8f4ff, #c39eff);
   --foreground: #36124e;

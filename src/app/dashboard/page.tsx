@@ -2,7 +2,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { db } from "../../utils/firebase";
+import { useRouter } from "next/navigation";
+
 import {
   collection,
   addDoc,
@@ -11,22 +12,32 @@ import {
   doc,
 } from "firebase/firestore";
 
+import {
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
+
+import { auth, db, ADMIN_UID } from "@/utils/firebase";
+
 import styles from "./Dashboard.module.css";
-import { Book } from "@/types/book";
-import { Article } from "@/types/article";
+import type { Book } from "@/types/book";
+import type { Article } from "@/types/article";
 
 export default function Dashboard() {
+  const router = useRouter();
+
   // Data states
   const [books, setBooks] = useState<Book[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
 
-  // Form states
+  // Book form states
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
   const [cover, setCover] = useState("");
 
+  // Article form states
   const [articleTitle, setArticleTitle] = useState("");
   const [articleAuthor, setArticleAuthor] = useState("");
   const [content, setContent] = useState("");
@@ -38,15 +49,24 @@ export default function Dashboard() {
   const [isSavingArticle, setIsSavingArticle] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch data
+  // Authentication + Fetch Data
   useEffect(() => {
-    const fetchData = async () => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user || user.uid !== ADMIN_UID) {
+        if (user) {
+          await signOut(auth);
+        }
+
+        router.replace("/admin/login");
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const [booksSnapshot, articlesSnapshot] =
-          await Promise.all([
-            getDocs(collection(db, "books")),
-            getDocs(collection(db, "articles")),
-          ]);
+        const [booksSnapshot, articlesSnapshot] = await Promise.all([
+          getDocs(collection(db, "books")),
+          getDocs(collection(db, "articles")),
+        ]);
 
         setBooks(
           booksSnapshot.docs.map((item) => ({
@@ -62,19 +82,22 @@ export default function Dashboard() {
           })) as Article[]
         );
       } catch (error) {
-        console.error(error);
+        console.error("Dashboard loading error:", error);
         setError("Failed to load dashboard data.");
       } finally {
         setIsLoading(false);
       }
-    };
+    });
 
-    fetchData();
-  }, []);
+    return () => unsubscribe();
+  }, [router]);
 
   // Add book
-  const handleAddBook = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddBook = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
+
     if (!title.trim()) return;
 
     setError("");
@@ -105,7 +128,7 @@ export default function Dashboard() {
       setLink("");
       setCover("");
     } catch (error) {
-      console.error(error);
+      console.error("Add book error:", error);
       setError("Failed to add book.");
     } finally {
       setIsSavingBook(false);
@@ -118,6 +141,8 @@ export default function Dashboard() {
       return;
     }
 
+    setError("");
+
     try {
       await deleteDoc(doc(db, "books", bookId));
 
@@ -125,7 +150,7 @@ export default function Dashboard() {
         prev.filter((book) => book.id !== bookId)
       );
     } catch (error) {
-      console.error(error);
+      console.error("Delete book error:", error);
       setError("Failed to delete book.");
     }
   };
@@ -136,8 +161,12 @@ export default function Dashboard() {
   ) => {
     e.preventDefault();
 
-    if (!articleTitle.trim() || !articleAuthor.trim() ||
-        !content.trim() || !slug.trim()) {
+    if (
+      !articleTitle.trim() ||
+      !articleAuthor.trim() ||
+      !content.trim() ||
+      !slug.trim()
+    ) {
       return;
     }
 
@@ -167,7 +196,7 @@ export default function Dashboard() {
       setContent("");
       setSlug("");
     } catch (error) {
-      console.error(error);
+      console.error("Add article error:", error);
       setError("Failed to add article.");
     } finally {
       setIsSavingArticle(false);
@@ -180,6 +209,8 @@ export default function Dashboard() {
       return;
     }
 
+    setError("");
+
     try {
       await deleteDoc(doc(db, "articles", articleId));
 
@@ -187,11 +218,12 @@ export default function Dashboard() {
         prev.filter((article) => article.id !== articleId)
       );
     } catch (error) {
-      console.error(error);
+      console.error("Delete article error:", error);
       setError("Failed to delete article.");
     }
   };
 
+  // Loading state
   if (isLoading) {
     return (
       <div className={styles.loadingSpinner}>
@@ -205,6 +237,7 @@ export default function Dashboard() {
       {error && (
         <div className={styles.alertDanger} role="alert">
           {error}
+
           <button
             type="button"
             onClick={() => setError("")}
